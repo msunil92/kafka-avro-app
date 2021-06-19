@@ -1,0 +1,12 @@
+
+{
+    "type" : "record",
+    "namespace" : "com",
+    "name" : "Customer",
+    "version" : "1",
+    "fields" : [
+    {"name" : "first_name", "type":"string", "doc" :"first name"},
+    {"name" : "last_name", "type":"string", "doc" :"last name"}
+    {"name" : "age", "type":"int", "doc" :"age"}
+    ]
+}

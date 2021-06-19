@@ -1,0 +1,59 @@
+cd /Users/sunil/Documents/softwares/confluent-6.1.1
+
+
+bin/zookeeper-server-start etc/kafka/zookeeper.properties
+
+bin/kafka-server-start etc/kafka/server.properties
+
+
+bin/kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic sunil
+
+bin/kafka-topics --list --bootstrap-server localhost:9092
+
+bin/kafka-topics --describe --bootstrap-server localhost:9092 --topic sunil
+
+bin/kafka-topics --delete --bootstrap-server localhost:9092 --topic sunil
+
+bin/kafka-console-producer --broker-list localhost:9092 --topic sunil
+
+bin/kafka-run-class kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic sunil --time -1
+
+bin/kafka-consumer-groups  --list --bootstrap-server localhost:9092
+
+Registry:
+
+bin/schema-registry-start ./etc/schema-registry/schema-registry.properties
+
+
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": " {  \"type\": \"record\", \"name\": \"avro_schema\", \"fields\": [ {\"name\": \"subject\", \"type\": \"string\"} ] }"}' http://localhost:8081/subjects/avro_schema/versions
+
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": " { \"type\" : \"record\", \"namespace\" : \"com.avro.model\", \"name\" : \"Customer\", \"version\" : \"1\", \"fields\" : [ {\"name\" : \"first_name\", \"type\":\"string\", \"doc\" :\"first name\"}, {\"name\" : \"last_name\", \"type\":\"string\", \"doc\" :\"last name\"}, {\"name\" : \"age\", \"type\":\"int\", \"doc\" :\"age\"} ] } "}' http://localhost:8081/subjects/customer/versions
+
+list:
+http://localhost:8081/subjects
+curl -X GET http://localhost:8081/subjects/avro_schema/versions/1
+
+
+Delete:
+curl -X DELETE http://localhost:8081/subjects/avro_schema/versions/latest
+curl -X DELETE http://localhost:8081/subjects/avro_schema/versions/1
+
+
+bin/kafka-avro-console-producer --broker-list localhost:9092 --topic avro_schema  --property value.schema='{ "type" : "record", "name" : "avro_schema", "fields" : [ { "name" : "subject", "type" : "string"}], "doc:" : "storing messages" }'
+
+
+bin/kafka-avro-console-producer --broker-list localhost:9092 --topic avro_topic --property value.schema='{"type":"record","name":"avro_schema","fields":[{"name":"subject", "type": "string"}]}'
+
+bin/kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic sunil --from-beginning
+
+bin/kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic avro-topic
+
+bin/kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic avro-topic --from-beginning --property schema.registry.url=http://localhost:8081
+
+
+{ \"type\" : \"record\", \"namespace\" : \"com.avro.model\", \"name\" : \"Customer\", \"version\" : \"1\", \"fields\" : [ {\"name\" : \"first_name\", \"type\":\"string\", \"doc\" :\"first name\"}, {\"name\" : \"last_name\", \"type\":\"string\", \"doc\" :\"last name\"}, {\"name\" : \"age\", \"type\":\"int\", \"doc\" :\"age\"} ] }
+
+
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": " { \"type\" : \"record\", \"namespace\" : \"com.avro.model\", \"name\" : \"Customer\", \"version\" : \"1\", \"fields\" : [ {\"name\" : \"first_name\", \"type\":\"string\", \"doc\" :\"first name\"}, {\"name\" : \"last_name\", \"type\":\"string\", \"doc\" :\"last name\"}, {\"name\" : \"age\", \"type\":\"int\", \"doc\" :\"age\"} ] } "}' http://localhost:8081/subjects/customer/versions
+
+bin/kafka-avro-console-producer --broker-list localhost:9092 --topic avro_topic --property value.schema=' { "type" : "record", "namespace" : "com", "name" : "Customer", "version" : "1", "fields" : [ {"name" : "first_name", "type":"string", "doc" :"first name"}, {"name" : "last_name", "type":"string", "doc" :"last name"} {"name" : "age", "type":"int", "doc" :"age"} ] } '
