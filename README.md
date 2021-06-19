@@ -34,4 +34,6 @@ Steps:
         http://localhost:8080/api/health
         
         Producer: http://localhost:8080/api/send?name=sunil
+
+        Consumer : http://localhost:8080/api/consume
         
