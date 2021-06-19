@@ -20,6 +20,8 @@ Steps:
         2. http://localhost:8081/subjects/customer/versions/1
    
 3. To create model class using avro schema file
+         
+        Download Link :: https://archive.apache.org/dist/avro/avro-1.7.7/java/
 
         java -jar avro-tools-1.7.7.jar compile schema customer.avsc .
 
