@@ -1,5 +1,6 @@
 package com.avro.kafkaapp.controller;
 
+import com.avro.kafkaapp.config.KafkaConfig;
 import com.avro.kafkaapp.model.Customer;
 import com.avro.kafkaapp.model.CustomerResponse;
 import com.avro.kafkaapp.service.AvroConsumer;
@@ -56,5 +57,12 @@ public class API {
         System.out.println(message);
 
         return message;
+    }
+
+    @Autowired
+    KafkaConfig kafkaConfig;
+    @GetMapping("test")
+    public String test(){
+        return kafkaConfig.getName();
     }
 }
